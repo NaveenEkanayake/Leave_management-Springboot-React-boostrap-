@@ -9,5 +9,5 @@ public interface AuthEmployeeservice {
 
    AuthEmployeeDto SignEmployee(AuthEmployeeDto authEmployeeDto);
    Optional<AuthEmployee> findByEmail(String email);
-
+   void  DeleteAuthEmployee(Long Id);
 }
