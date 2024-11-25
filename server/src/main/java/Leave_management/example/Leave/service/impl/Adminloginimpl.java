@@ -20,20 +20,20 @@ public class Adminloginimpl implements Adminloginservice {
     private final Adminloginrepository adminloginrepository;
     private final PasswordEncoder passwordEncoder;
     private final Jwtutil jwtutil;
-
     @Override
     public AdminloginDto adminsignup(AdminloginDto adminloginDto) {
         Adminlogin adminlogin = Adminloginmapper.mapToAdminlogin(adminloginDto);
+
+        // Encode the password
         String encodedPassword = passwordEncoder.encode(adminlogin.getPassword());
         adminlogin.setPassword(encodedPassword);
+
+        // Save the admin and debug
         Adminlogin newAdmin = adminloginrepository.save(adminlogin);
+        System.out.println("Admin created: " + newAdmin); // Add logging here
         return Adminloginmapper.mapToAdminloginDto(newAdmin);
     }
 
-    /**
-     * @param email
-     * @return
-     */
     @Override
     public Optional<Adminlogin> findByEmail(String email) {
         return adminloginrepository.findByEmail(email);

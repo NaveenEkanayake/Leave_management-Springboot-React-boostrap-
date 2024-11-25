@@ -28,31 +28,31 @@ public class EmployeeServiceimpl implements EmployeeService {
     }
     @Override
     public EmployeeDto getEmployeeByID(Long Id) {
-      Employee employee = employeeRepository.findById(Id)
-               .orElseThrow(() -> new ResourceNotFoundException("Employee is not exist with given id "));
+        Employee employee = employeeRepository.findById(Id)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee is not exist with given id "));
 
-      return Employeemapper.mapToEmployeeDto(employee);
+        return Employeemapper.mapToEmployeeDto(employee);
     }
 
     @Override
     public List<EmployeeDto> getAllEmployees() {
-       List<Employee> employees= employeeRepository.findAll();
+        List<Employee> employees= employeeRepository.findAll();
 
-       return employees.stream().map((employee -> Employeemapper.mapToEmployeeDto(employee)))
-               .collect(Collectors.toList());
+        return employees.stream().map((employee -> Employeemapper.mapToEmployeeDto(employee)))
+                .collect(Collectors.toList());
 
     }
 
     @Override
     public EmployeeDto updateEMployee(Long Id, EmployeeDto updatedemployee) {
-     Employee employee=  employeeRepository.findById(Id).orElseThrow(() -> new ResourceNotFoundException("Employee is not Exist with Given Id "));
-       employee.setFirstName(updatedemployee.getFirstName());
-       employee.setLastName(updatedemployee.getLastName());
-       employee.setEmail(updatedemployee.getEmail());
-       employee.setRole(updatedemployee.getRole());
-       Employee updatedEmployeeObj= employeeRepository.save(employee);
+        Employee employee=  employeeRepository.findById(Id).orElseThrow(() -> new ResourceNotFoundException("Employee is not Exist with Given Id "));
+        employee.setFirstName(updatedemployee.getFirstName());
+        employee.setLastName(updatedemployee.getLastName());
+        employee.setEmail(updatedemployee.getEmail());
+        employee.setRole(updatedemployee.getRole());
+        Employee updatedEmployeeObj= employeeRepository.save(employee);
 
-       return Employeemapper.mapToEmployeeDto(updatedEmployeeObj);
+        return Employeemapper.mapToEmployeeDto(updatedEmployeeObj);
 
     }
 
@@ -67,4 +67,3 @@ public class EmployeeServiceimpl implements EmployeeService {
 
     }
 }
-
