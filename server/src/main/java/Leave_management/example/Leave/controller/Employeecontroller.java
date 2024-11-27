@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -20,11 +21,12 @@ import java.util.*;
 
 import java.security.SecureRandom;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
 @CrossOrigin
-@RequestMapping("/api")
+@RequestMapping("/api/employee")
 public class Employeecontroller {
     private EmployeeService employeeservice;
     private EmployeeRepository employeeRepository;
@@ -40,6 +42,7 @@ public class Employeecontroller {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
     }
 
+   @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/addEmployee")
     public ResponseEntity<Object> createEmployee(@RequestBody EmployeeDto employeeDto) {
         try {
@@ -70,6 +73,7 @@ public class Employeecontroller {
                     employeeDto.getEmail(),
                     employeeDto.getRole());
 
+
             Employee savedEmployee = employeeRepository.save(employee);
             String employeeId = String.valueOf(authEmployeeservice.SignEmployee(authEmployeeDto));
             String subject = "Welcome to Our Leave Management System";
@@ -99,6 +103,7 @@ public class Employeecontroller {
     }
 
     // Get Employee by ID
+   @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/getEmployee/{id}")
     public ResponseEntity<Map<String, Object>> getEmployeeById(@PathVariable("id") Long id) {
         EmployeeDto employeeDto = employeeservice.getEmployeeByID(id);
@@ -111,16 +116,24 @@ public class Employeecontroller {
     }
 
     // Get All Employees
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/getAllEmployees")
     public ResponseEntity<Map<String, Object>> getAllEmployees() {
         List<EmployeeDto> employees = employeeservice.getAllEmployees();
+
+        // Exclude Admins from the list
+        employees = employees.stream()
+                .filter(employee -> !employee.getRole().equals("ROLE_ADMIN"))
+                .collect(Collectors.toList());
 
         Map<String, Object> response = new HashMap<>();
         response.put("data", employees);
         response.put("message", "All Employee Data Retrieved Successfully!");
         return ResponseEntity.ok(response);
     }
+
     //update EMployee
+   @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("/UpdateEmployee/{id}")
     public ResponseEntity<Map<String, Object>> updateEmployee(
             @PathVariable("id") Long id,
@@ -167,6 +180,7 @@ public class Employeecontroller {
     }
 
     // Delete Employee
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("deleteEmployee/{id}")
     public ResponseEntity<Map<String, Object>> deleteEmployee(@PathVariable("id") Long id) {
         try {

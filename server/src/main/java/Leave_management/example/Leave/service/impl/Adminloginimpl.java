@@ -6,7 +6,7 @@ import Leave_management.example.Leave.exception.ResourceNotFoundException;
 import Leave_management.example.Leave.mapper.Adminloginmapper;
 import Leave_management.example.Leave.repository.Adminloginrepository;
 import Leave_management.example.Leave.service.Adminloginservice;
-import Leave_management.example.Leave.util.Jwtutil;
+import Leave_management.example.Leave.util.JwtService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class Adminloginimpl implements Adminloginservice {
 
     private final Adminloginrepository adminloginrepository;
     private final PasswordEncoder passwordEncoder;
-    private final Jwtutil jwtutil;
+    private final JwtService jwtutil;
     @Override
     public AdminloginDto adminsignup(AdminloginDto adminloginDto) {
         Adminlogin adminlogin = Adminloginmapper.mapToAdminlogin(adminloginDto);
